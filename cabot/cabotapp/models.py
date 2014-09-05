@@ -156,6 +156,7 @@ class CheckGroupMixin(models.Model):
         return False
 
     def alert(self):
+        logger.info('ALERT called: %s' % (str(self)))
         if not self.alerts_enabled:
             return
         if self.overall_status != self.PASSING_STATUS:

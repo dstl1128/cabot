@@ -59,12 +59,14 @@ def send_email_alert(service, users, duty_officers):
     else:
         subject = 'Service back to normal: %s' % (service.name,)
     t = Template(email_template)
-    send_mail(
-        subject=subject,
+    d = dict( subject=subject,
         message=t.render(c),
         from_email='Cabot <%s>' % settings.CABOT_FROM_EMAIL,
         recipient_list=emails,
     )
+
+    logger.info('sending mail: %s' % repr(d))
+    send_mail(**d)
 
 
 def send_hipchat_alert(service, users, duty_officers):

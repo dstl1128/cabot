@@ -15,6 +15,7 @@ from .tasks import update_service, update_instance
 from datetime import datetime, timedelta
 from django.utils import timezone
 
+import sys
 import json
 import re
 import time
@@ -137,12 +138,21 @@ class CheckGroupMixin(models.Model):
 
     def most_severe(self, check_list):
         failures = [c.importance for c in check_list]
+        print >>sys.stderr, '='*60
+        print >>sys.stderr, 'FAILURE LIST:'
+        for x in failures:
+            print >>sys.stderr, failures
+        print >>sys.stderr, '='*60
         if self.CRITICAL_STATUS in failures:
+            print >>sys.stderr, 'CRITICAL STATUS'
             return self.CRITICAL_STATUS
         if self.ERROR_STATUS in failures:
+            print >>sys.stderr, 'ERROR STATUS'
             return self.ERROR_STATUS
         if self.WARNING_STATUS in failures:
+            print >>sys.stderr, 'WARNING STATUS'
             return self.WARNING_STATUS
+        print >>sys.stderr, 'PASSING STATUS'
         return self.PASSING_STATUS
 
     @property
@@ -156,6 +166,7 @@ class CheckGroupMixin(models.Model):
         return False
 
     def alert(self):
+        print >>sys.stderr, 'ALERT CALLED: %s' % (str(self))
         logger.info('ALERT called: %s' % (str(self)))
         if not self.alerts_enabled:
             return
@@ -221,6 +232,12 @@ class Service(CheckGroupMixin):
         self.old_overall_status = self.overall_status
         # Only active checks feed into our calculation
         status_checks_failed_count = self.all_failing_checks().count()
+        fclist = list(self.all_failing_checks())
+        print >>sys.stderr, '*'*60
+        print >>sys.stderr, 'SERVICE FAILING LIST:'
+        for x in fclist:
+            print >>sys.stderr, x
+        print >>sys.stderr, '*'*60
         self.overall_status = self.most_severe(self.all_failing_checks())
         self.snapshot = ServiceStatusSnapshot(
             service=self,
@@ -271,6 +288,12 @@ class Instance(CheckGroupMixin):
         self.old_overall_status = self.overall_status
         # Only active checks feed into our calculation
         status_checks_failed_count = self.all_failing_checks().count()
+        fclist = list(self.all_failing_checks())
+        print >>sys.stderr, '*'*60
+        print >>sys.stderr, 'INSTANCE FAILING LIST:'
+        for x in fclist:
+            print >>sys.stderr, x
+        print >>sys.stderr, '*'*60
         self.overall_status = self.most_severe(self.all_failing_checks())
         self.snapshot = InstanceStatusSnapshot(
             instance=self,

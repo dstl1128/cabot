@@ -39,7 +39,7 @@ def run_status_check(check_or_id):
 @task(ignore_result=True)
 def run_all_checks():
     from .models import StatusCheck
-    from datetime import timedelta, datetime
+    from datetime import timedelta
     checks = StatusCheck.objects.all()
     seconds = range(60)
     for check in checks:

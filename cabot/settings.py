@@ -134,12 +134,6 @@ EMAIL_HOST_USER = os.environ.get('SES_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('SES_PASS', '')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'   # 'django_smtp_ssl.SSLEmailBackend'
 
-import sys
-print >>sys.stderr, 'EMAIL_HOST:', EMAIL_HOST
-print >>sys.stderr, 'EMAIL_PORT:', EMAIL_PORT
-print >>sys.stderr, 'EMAIL_HOST_USER:', EMAIL_HOST_USER
-print >>sys.stderr, 'EMAIL_HOST_PASSWORD:', EMAIL_HOST_PASSWORD
-print >>sys.stderr, 'EMAIL_BACKEND:', EMAIL_BACKEND
 
 COMPRESS_OFFLINE = not DEBUG
 
